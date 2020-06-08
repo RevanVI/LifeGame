@@ -46,28 +46,14 @@ public class GridSystem : MonoBehaviour
             Tile tile = MainTilemap.GetTile<Tile>(pos);
             if (tile != null)
             {
-                Node centralTileNode = _mapGraph.GetNode(pos);
+                LifeNode centralTileNode = _mapGraph.GetNode(pos) as LifeNode;
                 if (centralTileNode == null)
                 {
-                    centralTileNode = new Node();
+                    centralTileNode = new LifeNode();
                     centralTileNode.Coords = pos;
+                    centralTileNode.Status = LifeNode.NodeStatus.Empty;
+                    centralTileNode.NewStatus = LifeNode.NodeStatus.Empty;
                     _mapGraph.AddNode(centralTileNode);
-                }
-                for (int i = 0; i < 8; ++i)
-                {
-                    Vector3Int currentTileLocation = pos + offsets[i];
-                    Tile offsetTile = MainTilemap.GetTile<Tile>(currentTileLocation);
-                    if (offsetTile != null)
-                    {
-                        Node offsetTileNode = _mapGraph.GetNode(currentTileLocation);
-                        if (offsetTileNode == null)
-                        {
-                            offsetTileNode = new Node();
-                            offsetTileNode.Coords = currentTileLocation;
-                            _mapGraph.AddNode(offsetTileNode);
-                        }
-                        centralTileNode.AddConnection(offsetTileNode);
-                    }
                 }
             }
         }
@@ -76,6 +62,18 @@ public class GridSystem : MonoBehaviour
     public Node GetNode(Vector3Int coords)
     {
         return _mapGraph.GetNode(coords);
+    }
+
+    public List<LifeNode> GetNearNodes(Vector3Int pos)
+    {
+        List<LifeNode> nearNodes = new List<LifeNode>();
+        for (int i = 0; i < 8; ++i)
+        {
+            LifeNode node = _mapGraph.GetNode(pos + offsets[i]) as LifeNode;
+            if (node != null)
+                nearNodes.Add(node);
+        }
+        return nearNodes;
     }
 
     /*
