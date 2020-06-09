@@ -12,6 +12,28 @@ public class LifeNode: Node
 
     public NodeStatus Status;
     public NodeStatus NewStatus;
+
+    public void AddLife(LifeDot life)
+    {
+        if (ObjectsOnTile.Count == 0)
+        {
+            ObjectsOnTile.Add(life.gameObject);
+            Status = NodeStatus.Occupied;
+        }
+    }
+
+    public LifeDot RemoveLife()
+    {
+        if (ObjectsOnTile.Count != 0)
+        {
+            GameObject lifeObject = ObjectsOnTile[0];
+            LifeDot life = lifeObject.GetComponent<LifeDot>();
+            ObjectsOnTile.Clear();
+            Status = NodeStatus.Empty;
+            return life;
+        }
+        return null;
+    }
 }
 
 public class LifeGraph : MapGraph

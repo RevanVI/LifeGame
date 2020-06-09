@@ -4,19 +4,68 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    public enum GameMode
+    {
+        Auto = 0,
+        Manual = 1,
+    }
+
+    public static GameController Instance;
+    public GameMode Mode;
+    private bool _nextStepRequested;
+    public LifeHandler LifeHandlerRef;
+    public GameUI GameUIRef;
+    public GameObject LifePrefab;
+    public int Years;
+
+    private bool _isFirstUpdate = true;
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        Years = 0;
+        LifeHandlerRef.Initialize();
+
+        GameUIRef.OnModeButtonClick.AddListener(ChangeGameMode);
+        GameUIRef.OnStepButtonClick.AddListener(RequestNextStep);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (_isFirstUpdate)
+        {
+            StartCoroutine(GameLoop());
+            _isFirstUpdate = false;
+        }
     }
 
-    public void ProcessStep()
+    public IEnumerator GameLoop()
+    {
+        while (true)
+        {
+            if (Mode == GameMode.Auto || _nextStepRequested)
+            {
+                _nextStepRequested = false;
+                CalculateStep();
+                yield return null;
+                ProcessStep();
+                yield return new WaitForSeconds(0.5f);
+                ++Years;
+            }
+            yield return null;
+        }
+    }
+
+    public void CalculateStep()
     {
         foreach (Vector3Int pos in GridSystem.Instance.MainTilemap.cellBounds.allPositionsWithin)
         {
@@ -32,6 +81,31 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public void ProcessStep()
+    {
+        foreach (Vector3Int pos in GridSystem.Instance.MainTilemap.cellBounds.allPositionsWithin)
+        {
+            LifeNode currentNode = GridSystem.Instance.GetNode(pos) as LifeNode;
+            if (currentNode.Status == LifeNode.NodeStatus.Empty && currentNode.NewStatus == LifeNode.NodeStatus.Occupied)
+            {
+                LifeDot life = LifeHandlerRef.TakeLife();
+                life.transform.position = GridSystem.Instance.GetWorldCoordsFromTilemap(pos);
+                currentNode.AddLife(life);
+                life.gameObject.SetActive(true);
+            }
+            else if (currentNode.Status == LifeNode.NodeStatus.Occupied && currentNode.NewStatus == LifeNode.NodeStatus.Empty)
+            {
+                LifeDot life = currentNode.RemoveLife();
+                LifeHandlerRef.ReleaseLife(life);
+            }
+            else if (currentNode.Status == LifeNode.NodeStatus.Occupied && currentNode.NewStatus == LifeNode.NodeStatus.Occupied)
+            {
+                LifeDot life = currentNode.ObjectsOnTile[0].GetComponent<LifeDot>();
+                ++life.Age;
+            }
+        }
+    }
+
     private int GetNeighboursCount(List<LifeNode> nearNodes)
     {
         int count = 0;
@@ -41,6 +115,26 @@ public class GameController : MonoBehaviour
                 ++count;
         }
         return count;
+    }
+
+    public void RegisterLife(LifeDot life)
+    {
+        GridSystem.Instance.AddLifeToGraph(life);
+    }
+
+    public void ChangeGameMode()
+    {
+        if (Mode == GameMode.Auto)
+            Mode = GameMode.Manual;
+        else
+            Mode = GameMode.Auto;
+        GameUIRef.ChangeMode();
+
+    }
+
+    public void RequestNextStep()
+    {
+        _nextStepRequested = true;
     }
 }
 

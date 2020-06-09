@@ -76,6 +76,13 @@ public class GridSystem : MonoBehaviour
         return nearNodes;
     }
 
+    public void AddLifeToGraph(LifeDot life)
+    {
+        Vector3Int coords = GetTilemapCoordsFromWorld(life.transform.position);
+        LifeNode node = _mapGraph.GetNode(coords) as LifeNode;
+        node.AddLife(life);
+    }
+
     /*
      * Tilemap section
      */
@@ -93,27 +100,27 @@ public class GridSystem : MonoBehaviour
             Debug.Log($"Tile at position ({cellPosition.x}, {cellPosition.y}) does not exist");
     }
 
-    public Vector3Int GetTilemapCoordsFromWorld(Tilemap tilemap, Vector3 worldCoords)
+    public Vector3Int GetTilemapCoordsFromWorld(Vector3 worldCoords)
     {
-        return tilemap.WorldToCell(worldCoords);
+        return MainTilemap.WorldToCell(worldCoords);
     }
 
-    public Vector3Int GetTilemapCoordsFromScreen(Tilemap tilemap, Vector3 screenCoords)
+    public Vector3Int GetTilemapCoordsFromScreen(Vector3 screenCoords)
     {
         Ray ray = CurrentCamera.ScreenPointToRay(screenCoords);
         Vector3 worldPosition = ray.GetPoint(-ray.origin.z / ray.direction.z);
-        return tilemap.WorldToCell(worldPosition);
+        return MainTilemap.WorldToCell(worldPosition);
     }
 
-    public Vector3 GetWorldCoordsFromTilemap(Tilemap tilemap, Vector3Int tilemapCoords)
+    public Vector3 GetWorldCoordsFromTilemap(Vector3Int tilemapCoords)
     {
-        return tilemap.CellToWorld(tilemapCoords);
+        return MainTilemap.GetCellCenterWorld(tilemapCoords);
     }
 
-    public Vector2 GetRelativePointPositionInTile(Tilemap tilemap, Vector3Int cellCoords, Vector3 pointCoords)
+    public Vector2 GetRelativePointPositionInTile(Vector3Int cellCoords, Vector3 pointCoords)
     {
-        Vector3 cellWorldCenter = tilemap.GetCellCenterWorld(cellCoords);
-        Vector3 cellSize = tilemap.cellSize;
+        Vector3 cellWorldCenter = MainTilemap.GetCellCenterWorld(cellCoords);
+        Vector3 cellSize = MainTilemap.cellSize;
         //offset center to left bottom corner of tile
         cellWorldCenter -= cellSize / 2;
 
