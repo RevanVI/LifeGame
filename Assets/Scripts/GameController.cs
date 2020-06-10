@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
@@ -14,11 +15,18 @@ public class GameController : MonoBehaviour
     public GameMode Mode;
     private bool _nextStepRequested;
     public LifeHandler LifeHandlerRef;
+    public InputController InputControllerRef;
     public GameUI GameUIRef;
     public GameObject LifePrefab;
+    public Camera MainCamera;
     public int Years;
 
     private bool _isFirstUpdate = true;
+
+    //debug
+    public Text touchText;
+    //---------------
+
     private void Awake()
     {
         if (Instance == null)
@@ -36,6 +44,9 @@ public class GameController : MonoBehaviour
 
         GameUIRef.OnModeButtonClick.AddListener(ChangeGameMode);
         GameUIRef.OnStepButtonClick.AddListener(RequestNextStep);
+        InputControllerRef.OnTap.AddListener(ProcessTap);
+        InputControllerRef.OnSwipe.AddListener(ProcessSwipe);
+        InputControllerRef.OnDrag.AddListener(ProcessDrag);
     }
 
     // Update is called once per frame
@@ -45,6 +56,12 @@ public class GameController : MonoBehaviour
         {
             StartCoroutine(GameLoop());
             _isFirstUpdate = false;
+        }
+
+        //input
+        if (Input.touchCount > 0)
+        {
+
         }
     }
 
@@ -135,6 +152,29 @@ public class GameController : MonoBehaviour
     public void RequestNextStep()
     {
         _nextStepRequested = true;
+    }
+
+    //input processing
+    public void ProcessTap(InputController.GestureData gestureData)
+    {
+        touchText.text = $"Tap. ID: {gestureData.fingerId}, Position: {gestureData.endPosition}, Time: {gestureData.time}";
+    }
+
+    public void ProcessDrag(InputController.GestureData gestureData)
+    {
+        Vector3 lastPosition = MainCamera.ScreenToWorldPoint(new Vector3(gestureData.endPosition.x - gestureData.deltaPosition.x, 
+                                                                          gestureData.endPosition.y - gestureData.deltaPosition.y, 
+                                                                          MainCamera.nearClipPlane));
+        Vector3 endPos = MainCamera.ScreenToWorldPoint(new Vector3(gestureData.endPosition.x, gestureData.endPosition.y, MainCamera.nearClipPlane));
+
+        MainCamera.transform.position += (lastPosition - endPos);
+        touchText.text = $"Drag. ID: {gestureData.fingerId}, Position: {gestureData.endPosition}, Time: {gestureData.time}\n" +
+            $"LastWorldPosition: {lastPosition}, EndWorldPosition: {endPos}, CameraPosition: {MainCamera.transform.position}";
+    }
+
+    public void ProcessSwipe(InputController.GestureData gestureData)
+    {
+        touchText.text = $"Swipe. ID: {gestureData.fingerId}, Position: {gestureData.endPosition}, Time: {gestureData.time}";
     }
 }
 
