@@ -22,6 +22,14 @@ public class GameController : MonoBehaviour
     public int Years;
 
     private bool _isFirstUpdate = true;
+    private bool _isCameraMoving = false;
+    private bool _stopCamera = false;
+    [SerializeField]
+    private float _basicCameraSpeed;
+    [SerializeField]
+    private AnimationCurve _cameraSpeedCurve;
+    [SerializeField]
+    private float _swipeCameraTime;
 
     //debug
     public Text touchText;
@@ -155,12 +163,16 @@ public class GameController : MonoBehaviour
     }
 
     //input processing
-    public void ProcessTap(InputController.GestureData gestureData)
+    protected void ProcessTap(InputController.GestureData gestureData)
     {
         touchText.text = $"Tap. ID: {gestureData.fingerId}, Position: {gestureData.endPosition}, Time: {gestureData.time}";
+        if (_isCameraMoving)
+        {
+            _stopCamera = true;
+        }
     }
 
-    public void ProcessDrag(InputController.GestureData gestureData)
+    protected void ProcessDrag(InputController.GestureData gestureData)
     {
         Vector3 lastPosition = MainCamera.ScreenToWorldPoint(new Vector3(gestureData.endPosition.x - gestureData.deltaPosition.x, 
                                                                           gestureData.endPosition.y - gestureData.deltaPosition.y, 
@@ -172,9 +184,38 @@ public class GameController : MonoBehaviour
             $"LastWorldPosition: {lastPosition}, EndWorldPosition: {endPos}, CameraPosition: {MainCamera.transform.position}";
     }
 
-    public void ProcessSwipe(InputController.GestureData gestureData)
+    protected void ProcessSwipe(InputController.GestureData gestureData)
     {
         touchText.text = $"Swipe. ID: {gestureData.fingerId}, Position: {gestureData.endPosition}, Time: {gestureData.time}";
+        Vector3 direction = new Vector3(gestureData.startPosition.x - gestureData.endPosition.x, gestureData.startPosition.y - gestureData.endPosition.y, 0).normalized;
+        _isCameraMoving = true;
+        StartCoroutine(CameraSwipe(direction));
+    }
+
+    protected IEnumerator CameraSwipe(Vector3 direction)
+    {
+        float curTime = 0;
+        bool end = false;
+        while (!end)
+        {
+            if (_stopCamera)
+            {
+                _stopCamera = false;
+                yield break;
+            }
+            curTime += Time.deltaTime;
+            if (curTime >= _swipeCameraTime)
+            {
+                curTime = _swipeCameraTime;
+                end = true;
+            }
+            float timeValue = curTime / _swipeCameraTime;
+            float speedModif = _cameraSpeedCurve.Evaluate(timeValue);
+            float speed = _basicCameraSpeed * speedModif;
+            MainCamera.transform.position += direction * speed * Time.deltaTime;
+            yield return null;
+        }
+        _isCameraMoving = false;
     }
 }
 
