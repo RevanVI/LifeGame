@@ -69,9 +69,9 @@
     <Compile Include="Assets\Scripts\LifeDot.cs" />
     <Compile Include="Assets\Scripts\LifeGraph.cs" />
     <Compile Include="Assets\Scripts\LifeHandler.cs" />
-    <Compile Include="Assets\Scripts\LifeInfo.cs" />
     <Compile Include="Assets\Scripts\LogHandler.cs" />
     <Compile Include="Assets\Scripts\MapGraph.cs" />
+    <Compile Include="Assets\Scripts\NodeInfoPanel.cs" />
     <Compile Include="Assets\Scripts\PointerHandler.cs" />
     <Compile Include="Assets\Scripts\SimpleCameraController.cs" />
     <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">

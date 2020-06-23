@@ -34,6 +34,15 @@ public class LifeNode: Node
         }
         return null;
     }
+
+    public LifeDot GetLife()
+    {
+        if (ObjectsOnTile.Count > 0)
+        {
+            return ObjectsOnTile[0].GetComponent<LifeDot>();
+        }
+        return null;
+    }
 }
 
 public class LifeGraph : MapGraph

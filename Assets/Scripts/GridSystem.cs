@@ -107,6 +107,7 @@ public class GridSystem : MonoBehaviour
 
     public Vector3Int GetTilemapCoordsFromScreen(Vector3 screenCoords)
     {
+        //Vector3 coords = new Vector3(screenCoords.x, screenCoords.y, MainTilemap.transform.position.z);
         Ray ray = CurrentCamera.ScreenPointToRay(screenCoords);
         Vector3 worldPosition = ray.GetPoint(ray.origin.z / ray.direction.z);
         return MainTilemap.WorldToCell(worldPosition);

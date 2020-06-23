@@ -31,6 +31,8 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private float _swipeCameraTime;
 
+    public NodeInfoPanel NodeInfo;
+
     //debug
     public Text touchText;
     //---------------
@@ -55,6 +57,7 @@ public class GameController : MonoBehaviour
         InputControllerRef.OnTap.AddListener(ProcessTap);
         InputControllerRef.OnSwipe.AddListener(ProcessSwipe);
         InputControllerRef.OnDrag.AddListener(ProcessDrag);
+        NodeInfo.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -169,6 +172,14 @@ public class GameController : MonoBehaviour
         if (_isCameraMoving)
         {
             _stopCamera = true;
+        }
+        else
+        {
+            NodeInfo.gameObject.SetActive(false);
+            //Vector3 pos = new Vector3(gestureData.endPosition.x, gestureData.endPosition.y, 0);
+            NodeInfo.transform.position = MainCamera.ScreenToViewportPoint(gestureData.endPosition);
+            NodeInfo.SetNode(GridSystem.Instance.GetNode(GridSystem.Instance.GetTilemapCoordsFromScreen(gestureData.endPosition)) as LifeNode);
+            NodeInfo.gameObject.SetActive(true);
         }
     }
 
