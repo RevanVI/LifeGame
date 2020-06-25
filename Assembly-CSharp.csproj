@@ -62,6 +62,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\ControlPanel.cs" />
+    <Compile Include="Assets\Scripts\CustomEvents.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\GameUI.cs" />
     <Compile Include="Assets\Scripts\GridSystem.cs" />
@@ -116,6 +118,15 @@
     <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
       <HintPath>E:/projects/Unity/LifeGame/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.InternalAPIEngineBridge.001">
+      <HintPath>E:/projects/Unity/LifeGame/Library/ScriptAssemblies/Unity.InternalAPIEngineBridge.001.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+      <HintPath>E:/projects/Unity/LifeGame/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Common.Runtime">
+      <HintPath>E:/projects/Unity/LifeGame/Library/ScriptAssemblies/Unity.2D.Common.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.2D.Tilemap.Editor">
       <HintPath>E:/projects/Unity/LifeGame/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
     </Reference>
@@ -127,6 +138,12 @@
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>E:/projects/Unity/LifeGame/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Common.Editor">
+      <HintPath>E:/projects/Unity/LifeGame/Library/ScriptAssemblies/Unity.2D.Common.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.InternalAPIEditorBridge.001">
+      <HintPath>E:/projects/Unity/LifeGame/Library/ScriptAssemblies/Unity.InternalAPIEditorBridge.001.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>E:/projects/Unity/LifeGame/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>

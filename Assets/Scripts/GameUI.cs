@@ -36,7 +36,7 @@ public class GameUI : MonoBehaviour
 
     public void ChangeMode()
     {
-        if (GameController.Instance.Mode == GameController.GameMode.Auto)
+        if (GameController.Instance.GameMode == GameController.EGameMode.Auto)
         {
             _modeButtonText.text = AutoModeText;
             StepButton.interactable = false;
@@ -57,4 +57,5 @@ public class GameUI : MonoBehaviour
     {
         OnStepButtonClick.Invoke();
     }
+
 }

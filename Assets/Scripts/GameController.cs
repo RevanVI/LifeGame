@@ -2,21 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class GameController : MonoBehaviour
 {
-    public enum GameMode
+    public enum EGameMode
     {
         Auto = 0,
         Manual = 1,
     }
 
+    public enum ETapMode
+    {
+        Normal = 0,
+        Spawn = 1,
+    }
+
     public static GameController Instance;
-    public GameMode Mode;
+    public EGameMode GameMode;
+    public ETapMode TapMode;
     private bool _nextStepRequested;
     public LifeHandler LifeHandlerRef;
     public InputController InputControllerRef;
     public GameUI GameUIRef;
+    public ControlPanel ControlPanelRef;
     public GameObject LifePrefab;
     public Camera MainCamera;
     public int Years;
@@ -32,6 +41,8 @@ public class GameController : MonoBehaviour
     private float _swipeCameraTime;
 
     public NodeInfoPanel NodeInfo;
+
+    public UnityEvent OnStep;
 
     //debug
     public Text touchText;
@@ -51,6 +62,7 @@ public class GameController : MonoBehaviour
     {
         Years = 0;
         LifeHandlerRef.Initialize();
+        OnStep = new UnityEvent();
 
         GameUIRef.OnModeButtonClick.AddListener(ChangeGameMode);
         GameUIRef.OnStepButtonClick.AddListener(RequestNextStep);
@@ -58,6 +70,8 @@ public class GameController : MonoBehaviour
         InputControllerRef.OnSwipe.AddListener(ProcessSwipe);
         InputControllerRef.OnDrag.AddListener(ProcessDrag);
         NodeInfo.gameObject.SetActive(false);
+        OnStep.AddListener(NodeInfo.UpdateInfo);
+
     }
 
     // Update is called once per frame
@@ -80,14 +94,15 @@ public class GameController : MonoBehaviour
     {
         while (true)
         {
-            if (Mode == GameMode.Auto || _nextStepRequested)
+            if (GameMode == EGameMode.Auto || _nextStepRequested)
             {
                 _nextStepRequested = false;
                 CalculateStep();
                 yield return null;
                 ProcessStep();
-                yield return new WaitForSeconds(0.5f);
+                OnStep.Invoke();
                 ++Years;
+                yield return new WaitForSeconds(0.5f);
             }
             yield return null;
         }
@@ -152,10 +167,10 @@ public class GameController : MonoBehaviour
 
     public void ChangeGameMode()
     {
-        if (Mode == GameMode.Auto)
-            Mode = GameMode.Manual;
+        if (GameMode == EGameMode.Auto)
+            GameMode = EGameMode.Manual;
         else
-            Mode = GameMode.Auto;
+            GameMode = EGameMode.Auto;
         GameUIRef.ChangeMode();
 
     }
@@ -175,11 +190,14 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            NodeInfo.gameObject.SetActive(false);
-            //Vector3 pos = new Vector3(gestureData.endPosition.x, gestureData.endPosition.y, 0);
-            NodeInfo.transform.position = MainCamera.ScreenToViewportPoint(gestureData.endPosition);
-            NodeInfo.SetNode(GridSystem.Instance.GetNode(GridSystem.Instance.GetTilemapCoordsFromScreen(gestureData.endPosition)) as LifeNode);
-            NodeInfo.gameObject.SetActive(true);
+            LifeNode buf = GridSystem.Instance.GetNode(GridSystem.Instance.GetTilemapCoordsFromScreen(gestureData.endPosition)) as LifeNode;
+            if (buf != null)
+            {
+                NodeInfo.gameObject.SetActive(false);
+                NodeInfo.transform.position = gestureData.endPosition;
+                NodeInfo.SetNode(buf);
+                NodeInfo.gameObject.SetActive(true);
+            }
         }
     }
 
@@ -227,6 +245,17 @@ public class GameController : MonoBehaviour
             yield return null;
         }
         _isCameraMoving = false;
+    }
+
+    public void ProcessSpawnModeButtonClick(bool status)
+    {
+        if (status == true)
+        {
+            GameMode = EGameMode.Manual;
+            GameUIRef.ChangeMode();
+            TapMode = ETapMode.Spawn;
+        }
+
     }
 }
 

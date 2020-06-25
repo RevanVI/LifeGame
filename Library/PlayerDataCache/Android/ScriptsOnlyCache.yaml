@@ -7,6 +7,7 @@ ScriptsOnlyBuild:
     - InputController
     - LifeDot
     - LifeHandler
+    - NodeInfoPanel
     Unity.2D.Tilemap.Editor.dll:
     - UnityEditor.Tilemaps.GridPaintingState
     - UnityEditor.Tilemaps.GridPaletteBrushes
@@ -125,65 +126,67 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12536}
     - Class: 114
-      Script: {instanceID: 12738}
+      Script: {instanceID: 12678}
     - Class: 114
-      Script: {instanceID: 12778}
+      Script: {instanceID: 12740}
     - Class: 114
-      Script: {instanceID: 12790}
+      Script: {instanceID: 12780}
     - Class: 114
-      Script: {instanceID: 12836}
+      Script: {instanceID: 12792}
     - Class: 114
-      Script: {instanceID: 12928}
+      Script: {instanceID: 12838}
     - Class: 114
-      Script: {instanceID: 13202}
+      Script: {instanceID: 12930}
     - Class: 114
-      Script: {instanceID: 13228}
+      Script: {instanceID: 13204}
     - Class: 114
-      Script: {instanceID: 13352}
+      Script: {instanceID: 13230}
     - Class: 114
-      Script: {instanceID: 13502}
+      Script: {instanceID: 13354}
     - Class: 114
-      Script: {instanceID: 13562}
+      Script: {instanceID: 13504}
     - Class: 114
-      Script: {instanceID: 13582}
+      Script: {instanceID: 13564}
     - Class: 114
-      Script: {instanceID: 13702}
+      Script: {instanceID: 13584}
     - Class: 114
-      Script: {instanceID: 13730}
+      Script: {instanceID: 13704}
     - Class: 114
-      Script: {instanceID: 13738}
+      Script: {instanceID: 13732}
     - Class: 114
-      Script: {instanceID: 13810}
+      Script: {instanceID: 13740}
     - Class: 114
-      Script: {instanceID: 13976}
+      Script: {instanceID: 13812}
     - Class: 114
-      Script: {instanceID: 14040}
+      Script: {instanceID: 13978}
     - Class: 114
-      Script: {instanceID: 14056}
+      Script: {instanceID: 14042}
     - Class: 114
-      Script: {instanceID: 14110}
+      Script: {instanceID: 14058}
     - Class: 114
-      Script: {instanceID: 14340}
+      Script: {instanceID: 14112}
     - Class: 114
-      Script: {instanceID: 14518}
+      Script: {instanceID: 14342}
     - Class: 114
-      Script: {instanceID: 14564}
+      Script: {instanceID: 14520}
     - Class: 114
-      Script: {instanceID: 14766}
+      Script: {instanceID: 14566}
     - Class: 114
       Script: {instanceID: 14768}
     - Class: 114
-      Script: {instanceID: 14796}
+      Script: {instanceID: 14770}
     - Class: 114
-      Script: {instanceID: 14820}
+      Script: {instanceID: 14798}
     - Class: 114
       Script: {instanceID: 14822}
     - Class: 114
-      Script: {instanceID: 14874}
+      Script: {instanceID: 14824}
     - Class: 114
-      Script: {instanceID: 14934}
+      Script: {instanceID: 14876}
     - Class: 114
-      Script: {instanceID: 14940}
+      Script: {instanceID: 14936}
+    - Class: 114
+      Script: {instanceID: 14942}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -427,7 +430,7 @@ ScriptsOnlyBuild:
     className: AspectRatioFitter
   - hash:
       serializedVersion: 2
-      Hash: db3fb2b7f22c2e3febeeb34803b90167
+      Hash: 5b7be9c84fe16a957027ee92d44b4c56
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameController
@@ -557,6 +560,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.RenderPipelines.Universal.Runtime.dll
     namespaceName: UnityEngine.Rendering.Universal
     className: UniversalRenderPipelineAsset
+  - hash:
+      serializedVersion: 2
+      Hash: 695e83c852e5bea6e3582038af04d207
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: NodeInfoPanel
   - hash:
       serializedVersion: 2
       Hash: 5e1eefcd5106de6c2e85908a3b2d3f04

@@ -87,7 +87,7 @@ public class InputController : MonoBehaviour
                     float distance = (_gestures[index].endPosition - _gestures[index].startPosition).magnitude;
                     if (touch.phase == TouchPhase.Moved)
                     {
-                        if (distance > minDistance)
+                        if (distance > minDistance || _isMoving)
                         {
                             _isMoving = true;
                             if (_gestures[index].time > maxTime)

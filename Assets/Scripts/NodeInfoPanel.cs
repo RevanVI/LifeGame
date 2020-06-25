@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 public class NodeInfoPanel : MonoBehaviour
 {
+    [SerializeField]
     private Text _positionText;
+    [SerializeField]
     private Text _yearsText;
 
     protected LifeNode Node;
@@ -18,8 +20,11 @@ public class NodeInfoPanel : MonoBehaviour
         {
             _yearsText.gameObject.SetActive(false);
         }
-        _yearsText.gameObject.SetActive(true);
-        _yearsText.text = Node.GetLife().Age.ToString();
+        else
+        {
+            _yearsText.gameObject.SetActive(true);
+            _yearsText.text = Node.GetLife().Age.ToString();
+        }
     }
 
     public void SetNode(LifeNode node)
