@@ -43,7 +43,7 @@ public class GameController : MonoBehaviour
     public NodeInfoPanel NodeInfo;
 
     public UnityEvent OnStep;
-
+    
     //debug
     public Text touchText;
     //---------------
@@ -71,7 +71,7 @@ public class GameController : MonoBehaviour
         InputControllerRef.OnDrag.AddListener(ProcessDrag);
         NodeInfo.gameObject.SetActive(false);
         OnStep.AddListener(NodeInfo.UpdateInfo);
-
+        ControlPanelRef.OnSpawnButtonClick.AddListener(ProcessSpawnModeButtonClick);
     }
 
     // Update is called once per frame
@@ -253,9 +253,16 @@ public class GameController : MonoBehaviour
         {
             GameMode = EGameMode.Manual;
             GameUIRef.ChangeMode();
+            ControlPanelRef.ClearToggles();
             TapMode = ETapMode.Spawn;
+            Debug.Log("Enable spawn");
         }
-
+        else
+        {
+            ControlPanelRef.ClearToggles();
+            TapMode = ETapMode.Normal;
+            Debug.Log("Disable spawn");
+        }
     }
 }
 

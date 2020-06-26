@@ -7,6 +7,7 @@ using UnityEngine.Events;
 
 public class ControlPanel : MonoBehaviour
 {
+    [SerializeField]
     private Toggle _spawnButton;
 
     public BoolEvent OnSpawnButtonClick;
@@ -21,6 +22,7 @@ public class ControlPanel : MonoBehaviour
     void Start()
     {
         _spawnButton.onValueChanged.AddListener(ProcessSpawnButtonClick);
+        //_spawnButton.
     }
 
     // Update is called once per frame
@@ -31,6 +33,7 @@ public class ControlPanel : MonoBehaviour
 
     public void ProcessSpawnButtonClick(bool status)
     {
+        Debug.Log("SpawnBUttonClick");
         OnSpawnButtonClick.Invoke(status);
     }
 
