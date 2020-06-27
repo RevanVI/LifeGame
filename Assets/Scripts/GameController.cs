@@ -41,6 +41,10 @@ public class GameController : MonoBehaviour
     private float _swipeCameraTime;
 
     public NodeInfoPanel NodeInfo;
+    public HealthBar HealthBarRef;
+
+    public int MaxPower = 5;
+    private int _power = 5;
 
     public UnityEvent OnStep;
     
@@ -70,8 +74,12 @@ public class GameController : MonoBehaviour
         InputControllerRef.OnSwipe.AddListener(ProcessSwipe);
         InputControllerRef.OnDrag.AddListener(ProcessDrag);
         NodeInfo.gameObject.SetActive(false);
+        HealthBarRef.SetMode(true);
+        HealthBarRef.SetMaxValue(MaxPower);
+        HealthBarRef.SetValue(MaxPower);
         OnStep.AddListener(NodeInfo.UpdateInfo);
         ControlPanelRef.OnSpawnButtonClick.AddListener(ProcessSpawnModeButtonClick);
+        ControlPanelRef.OnDebugButtonClick.AddListener(ProcessDebugModeButtonClick);
     }
 
     // Update is called once per frame
@@ -92,6 +100,7 @@ public class GameController : MonoBehaviour
 
     public IEnumerator GameLoop()
     {
+        int counter = 0;
         while (true)
         {
             if (GameMode == EGameMode.Auto || _nextStepRequested)
@@ -99,6 +108,12 @@ public class GameController : MonoBehaviour
                 _nextStepRequested = false;
                 CalculateStep();
                 yield return null;
+                ++counter;
+                if (counter == 2)
+                {
+                    counter = 0;
+                    ChangePower(1);
+                }
                 ProcessStep();
                 OnStep.Invoke();
                 ++Years;
@@ -170,7 +185,13 @@ public class GameController : MonoBehaviour
         if (GameMode == EGameMode.Auto)
             GameMode = EGameMode.Manual;
         else
+        {
             GameMode = EGameMode.Auto;
+            if (TapMode != ETapMode.Normal)
+            {
+                ControlPanelRef.ClearToggles();
+            }
+        }
         GameUIRef.ChangeMode();
 
     }
@@ -253,16 +274,45 @@ public class GameController : MonoBehaviour
         {
             GameMode = EGameMode.Manual;
             GameUIRef.ChangeMode();
-            ControlPanelRef.ClearToggles();
+            //ControlPanelRef.ClearToggles();
             TapMode = ETapMode.Spawn;
+
             Debug.Log("Enable spawn");
         }
         else
         {
-            ControlPanelRef.ClearToggles();
+            //ControlPanelRef.ClearToggles();
             TapMode = ETapMode.Normal;
             Debug.Log("Disable spawn");
         }
+    }
+
+    public void ProcessDebugModeButtonClick(bool status)
+    {
+        if (status == true)
+        {
+            GameMode = EGameMode.Manual;
+            GameUIRef.ChangeMode();
+            TapMode = ETapMode.Spawn;
+            ChangePower(-1);
+            HealthBarRef.SetValue(_power);
+            Debug.Log("Enable debug");
+        }
+        else
+        {
+            TapMode = ETapMode.Normal;
+            Debug.Log("Disable debug");
+        }
+    }
+
+    public void ChangePower(int value)
+    {
+        _power += value;
+        if (_power > MaxPower)
+            _power = MaxPower;
+        else if (_power < 0)
+            _power = 0;
+        HealthBarRef.SetValue(_power);
     }
 }
 
