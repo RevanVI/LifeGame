@@ -7,7 +7,8 @@ public class LifeNode: Node
     public enum NodeStatus
     {
         Empty = 0,
-        Occupied = 1
+        Occupied = 1,
+        Blocked = 2,
     }
 
     public NodeStatus Status;

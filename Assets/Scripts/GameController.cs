@@ -128,6 +128,8 @@ public class GameController : MonoBehaviour
         foreach (Vector3Int pos in GridSystem.Instance.MainTilemap.cellBounds.allPositionsWithin)
         {
             LifeNode currentNode = GridSystem.Instance.GetNode(pos) as LifeNode;
+            if (currentNode.Status == LifeNode.NodeStatus.Blocked)
+                continue;
             List<LifeNode> nearNodes = GridSystem.Instance.GetNearNodes(pos);
             int neigboursCount = GetNeighboursCount(nearNodes);
 

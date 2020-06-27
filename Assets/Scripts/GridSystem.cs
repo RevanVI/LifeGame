@@ -43,7 +43,7 @@ public class GridSystem : MonoBehaviour
         //analyze tilemap and build map graph
         foreach(Vector3Int pos in MainTilemap.cellBounds.allPositionsWithin)
         {
-            Tile tile = MainTilemap.GetTile<Tile>(pos);
+            MapTile tile = MainTilemap.GetTile<Tile>(pos) as MapTile;
             if (tile != null)
             {
                 LifeNode centralTileNode = _mapGraph.GetNode(pos) as LifeNode;
@@ -51,8 +51,11 @@ public class GridSystem : MonoBehaviour
                 {
                     centralTileNode = new LifeNode();
                     centralTileNode.Coords = pos;
-                    centralTileNode.Status = LifeNode.NodeStatus.Empty;
-                    centralTileNode.NewStatus = LifeNode.NodeStatus.Empty;
+                    if (tile.IsBlocked == false)
+                        centralTileNode.Status = LifeNode.NodeStatus.Empty;
+                    else
+                        centralTileNode.Status = LifeNode.NodeStatus.Blocked;
+                    centralTileNode.NewStatus = centralTileNode.Status;
                     _mapGraph.AddNode(centralTileNode);
                 }
             }
