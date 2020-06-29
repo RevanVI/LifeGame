@@ -211,15 +211,28 @@ public class GameController : MonoBehaviour
         {
             _stopCamera = true;
         }
-        else
+        else 
         {
             LifeNode buf = GridSystem.Instance.GetNode(GridSystem.Instance.GetTilemapCoordsFromScreen(gestureData.endPosition)) as LifeNode;
             if (buf != null)
             {
-                NodeInfo.gameObject.SetActive(false);
-                NodeInfo.transform.position = gestureData.endPosition;
-                NodeInfo.SetNode(buf);
-                NodeInfo.gameObject.SetActive(true);
+                if (TapMode == ETapMode.Spawn)
+                {
+                    if (buf.GetLife() != null)
+                        return;
+                    ChangePower(-1);
+                    LifeDot life = LifeHandlerRef.TakeLife();
+                    life.transform.position = GridSystem.Instance.GetWorldCoordsFromTilemap(buf.Coords);
+                    buf.AddLife(life);
+                    life.gameObject.SetActive(true);
+                }
+                else
+                {
+                    NodeInfo.gameObject.SetActive(false);
+                    NodeInfo.transform.position = gestureData.endPosition;
+                    NodeInfo.SetNode(buf);
+                    NodeInfo.gameObject.SetActive(true);
+                }
             }
         }
     }
@@ -276,14 +289,11 @@ public class GameController : MonoBehaviour
         {
             GameMode = EGameMode.Manual;
             GameUIRef.ChangeMode();
-            //ControlPanelRef.ClearToggles();
             TapMode = ETapMode.Spawn;
-
             Debug.Log("Enable spawn");
         }
         else
         {
-            //ControlPanelRef.ClearToggles();
             TapMode = ETapMode.Normal;
             Debug.Log("Disable spawn");
         }
@@ -296,8 +306,6 @@ public class GameController : MonoBehaviour
             GameMode = EGameMode.Manual;
             GameUIRef.ChangeMode();
             TapMode = ETapMode.Spawn;
-            ChangePower(-1);
-            HealthBarRef.SetValue(_power);
             Debug.Log("Enable debug");
         }
         else
