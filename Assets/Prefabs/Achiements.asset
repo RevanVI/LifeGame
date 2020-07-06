@@ -13,33 +13,17 @@ MonoBehaviour:
   m_Name: Achiements
   m_EditorClassIdentifier: 
   achievementData:
-  - Id: 0
-    Icon: {fileID: 0}
-    Title: 
-    Description: 
-    Score: 0
+  - Icon: {fileID: 0}
+    Title: First
+    Description: first description
+    Score: 5
     Steps: 0
-  - Id: 0
-    Icon: {fileID: 0}
-    Title: 
-    Description: 
-    Score: 0
+    EnumId: FirstAchievement
+    Id: 0
+  - Icon: {fileID: 0}
+    Title: Second
+    Description: second description
+    Score: 10
     Steps: 0
-  - Id: 0
-    Icon: {fileID: 0}
-    Title: 
-    Description: 
-    Score: 0
-    Steps: 0
-  - Id: 0
-    Icon: {fileID: 0}
-    Title: 
-    Description: 
-    Score: 0
-    Steps: 0
-  - Id: 0
-    Icon: {fileID: 0}
-    Title: 
-    Description: 
-    Score: 0
-    Steps: 0
+    EnumId: SecondAchievement
+    Id: 0

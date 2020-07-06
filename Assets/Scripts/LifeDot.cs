@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class LifeDot : MonoBehaviour
 {
@@ -9,8 +10,9 @@ public class LifeDot : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        OnDie = new UnityEvent();
         Age = 0;
-        GameController.Instance.RegisterLife(this);
+        GameController.Instance.RegisterLife(this); 
     }
 
     // Update is called once per frame
@@ -18,4 +20,6 @@ public class LifeDot : MonoBehaviour
     {
         
     }
+
+    static public UnityEvent OnDie;
 }

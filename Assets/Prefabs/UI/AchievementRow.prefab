@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 6402666113029572295}
   - component: {fileID: 1468300812011510830}
   - component: {fileID: 3260293024546906469}
+  - component: {fileID: 676592084197576076}
   m_Layer: 5
   m_Name: AchievementRow
   m_TagString: Untagged
@@ -175,6 +176,22 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &676592084197576076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4379851616612611136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67b4a443f1b63ab4581731f217fbcbda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _icon: {fileID: 811356947203634299}
+  _title: {fileID: 3949029048470096180}
+  _description: {fileID: 1424448806148329174}
+  _score: {fileID: 208940264620625471}
 --- !u!1 &5111959112290042993
 GameObject:
   m_ObjectHideFlags: 0
