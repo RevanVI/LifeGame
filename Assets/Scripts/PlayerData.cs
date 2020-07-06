@@ -6,11 +6,11 @@ using UnityEngine;
 public class PlayerData
 {
     public int AchievementPoints;
-    public Dictionary<Achievements.EAchievements, (int TargetCount, int CurrentCount)> AchievementsStatus;
+    public Dictionary<Achievements.EAchievements, int> AchievementsStatus;
 
     public PlayerData()
     {
         AchievementPoints = 0;
-        AchievementsStatus = new Dictionary<Achievements.EAchievements, (int TargetCount, int CurrentCount)>();
+        AchievementsStatus = new Dictionary<Achievements.EAchievements, int>();
     }
 }

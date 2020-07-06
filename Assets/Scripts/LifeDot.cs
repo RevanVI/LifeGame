@@ -10,7 +10,6 @@ public class LifeDot : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        OnDie = new UnityEvent();
         Age = 0;
         GameController.Instance.RegisterLife(this); 
     }
@@ -21,5 +20,5 @@ public class LifeDot : MonoBehaviour
         
     }
 
-    static public UnityEvent OnDie;
+    static public UnityEvent OnDie = new UnityEvent();
 }

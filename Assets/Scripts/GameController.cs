@@ -47,6 +47,7 @@ public class GameController : MonoBehaviour
     private int _power = 5;
 
     public UnityEvent OnStep;
+    public UnityEvent OnSpawn;
     
     //debug
     public Text touchText;
@@ -58,7 +59,7 @@ public class GameController : MonoBehaviour
             Instance = this;
         else
             Destroy(gameObject);
-
+        OnSpawn = new UnityEvent();
     }
 
     // Start is called before the first frame update
@@ -158,6 +159,7 @@ public class GameController : MonoBehaviour
             else if (currentNode.Status == LifeNode.NodeStatus.Occupied && currentNode.NewStatus == LifeNode.NodeStatus.Empty)
             {
                 LifeDot life = currentNode.RemoveLife();
+                LifeDot.OnDie.Invoke();
                 LifeHandlerRef.ReleaseLife(life);
             }
             else if (currentNode.Status == LifeNode.NodeStatus.Occupied && currentNode.NewStatus == LifeNode.NodeStatus.Occupied)
@@ -227,6 +229,7 @@ public class GameController : MonoBehaviour
                     life.transform.position = GridSystem.Instance.GetWorldCoordsFromTilemap(buf.Coords);
                     buf.AddLife(life);
                     life.gameObject.SetActive(true);
+                    OnSpawn.Invoke();
                 }
                 else
                 {

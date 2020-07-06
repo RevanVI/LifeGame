@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   achievementData:
   - Icon: {fileID: 0}
-    Title: First
+    Title: Die
     Description: first description
     Score: 5
-    Steps: 0
-    EnumId: FirstAchievement
+    Steps: 10
+    EnumId: Die10
     Id: 0
   - Icon: {fileID: 0}
-    Title: Second
+    Title: Create life
     Description: second description
     Score: 10
-    Steps: 0
-    EnumId: SecondAchievement
+    Steps: 5
+    EnumId: CreateLife5
     Id: 0

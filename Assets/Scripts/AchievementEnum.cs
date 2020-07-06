@@ -2,7 +2,7 @@ namespace Achievements
 {
 	public enum EAchievements
 	{
-		FirstAchievement,
-		SecondAchievement,
+		Die10,
+		CreateLife5,
 	}
 }

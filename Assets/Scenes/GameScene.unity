@@ -4506,7 +4506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33365b886ab88294ea3e8aed7e2a2f70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AchievementsData: {fileID: 11400000, guid: 10e69964d915db64e8c6e332ce1c5c00, type: 2}
+  _achievementsData: {fileID: 11400000, guid: 10e69964d915db64e8c6e332ce1c5c00, type: 2}
   _achRow: {fileID: 4379851616612611136, guid: 6f3f33cc39b9c714d8e633b48e2ec3df, type: 3}
   _achContent: {fileID: 1255710645}
 --- !u!1 &1484572740
@@ -4923,6 +4923,9 @@ MonoBehaviour:
   HealthBarRef: {fileID: 2055740186}
   MaxPower: 5
   OnStep:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSpawn:
     m_PersistentCalls:
       m_Calls: []
   touchText: {fileID: 1195702982}

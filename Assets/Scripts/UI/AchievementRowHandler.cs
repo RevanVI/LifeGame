@@ -53,6 +53,15 @@ public class AchievementRowHandler : MonoBehaviour
             _score.text = value;
         }
     }
+    [SerializeField]
+    private Text _steps;
+    public (int current, int target) Steps
+    {
+        set
+        {
+            _steps.text = $"{value.current} / {value.target}";
+        }
+    }
 
     public void SetData(Achievements.AchievementData data)
     {
@@ -60,17 +69,6 @@ public class AchievementRowHandler : MonoBehaviour
         Title = data.Title;
         Description = data.Description;
         Score = data.Score.ToString();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Steps = (0, data.Steps);
     }
 }

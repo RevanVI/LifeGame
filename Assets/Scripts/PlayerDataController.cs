@@ -31,7 +31,10 @@ public class PlayerDataController
     private PlayerDataController()
     {
         if (!File.Exists(_filePath))
+        {
             Data = new PlayerData();
+            Achievements.AchievementController.Instance.InitializePlayerData(Data);
+        }
         else
             LoadData();
     }
@@ -59,6 +62,7 @@ public class PlayerDataController
         else
         {
             Data = new PlayerData();
+            Achievements.AchievementController.Instance.InitializePlayerData(Data);
             WriteData();
         }
     }
