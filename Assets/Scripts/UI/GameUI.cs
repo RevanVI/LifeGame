@@ -11,6 +11,10 @@ public class GameUI : MonoBehaviour
     public Button StepButton;
     private Text _stepButtonText;
 
+    [SerializeField]
+    private Text _yearsText;
+
+
     public string AutoModeText = "Auto";
     public string ManualModeText = "Manual";
 
@@ -56,6 +60,11 @@ public class GameUI : MonoBehaviour
     public void ProcessStepButtonClick()
     {
         OnStepButtonClick.Invoke();
+    }
+
+    public void UpdateYearsText(int years)
+    {
+        _yearsText.text = years.ToString();
     }
 
 }

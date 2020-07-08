@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Achievements
 {
@@ -24,6 +25,8 @@ namespace Achievements
         private GameObject _achRow;
         [SerializeField]
         private GameObject _achContent;
+        [SerializeField]
+        private Text _pointsText;
         //end ui
 
         private void Awake()
@@ -55,31 +58,23 @@ namespace Achievements
             ProcessAchievement(EAchievements.Die10);
         }
 
-        private void LoadAchievements()
-        {
-            for (int i = 0; i < _achievementsData.achievementData.Count; ++i)
-            {
-                GameObject gameObject = Instantiate(_achRow, _achContent.transform);
-                AchievementRowHandler achRow = gameObject.GetComponent<AchievementRowHandler>();
-                achRow.SetData(_achievementsData.achievementData[i]);
-                EAchievements buf = (EAchievements)i;
-                int currentCount = PlayerDataController.Instance.Data.AchievementsStatus[(EAchievements)i];
-                achRow.Steps = (currentCount, _achievementsData.achievementData[i].Steps);
-            }
-        }
-
         public void UpdateAchievements()
         {
             if (_achContent.transform.childCount == 0)
-                LoadAchievements();
-            else
-                for (int i = 0; i < _achContent.transform.childCount; ++i)
+            {
+                for (int i = 0; i < _achievementsData.achievementData.Count; ++i)
                 {
-                    AchievementRowHandler achRow = _achContent.transform.GetChild(i).GetComponent<AchievementRowHandler>();
-                    achRow.SetData(_achievementsData.achievementData[i]);
-                    int currentCount = PlayerDataController.Instance.Data.AchievementsStatus[(EAchievements)i];
-                    achRow.Steps = (currentCount, _achievementsData.achievementData[i].Steps);
+                    GameObject gameObject = Instantiate(_achRow, _achContent.transform);
                 }
+            }
+            for (int i = 0; i < _achContent.transform.childCount; ++i)
+            {
+                AchievementRowHandler achRow = _achContent.transform.GetChild(i).GetComponent<AchievementRowHandler>();
+                achRow.SetData(_achievementsData.achievementData[i]);
+                int currentCount = PlayerDataController.Instance.Data.AchievementsStatus[(EAchievements)i];
+                achRow.Steps = (currentCount, _achievementsData.achievementData[i].Steps);
+            }
+            _pointsText.text = PlayerDataController.Instance.Data.AchievementPoints.ToString();
         }
 
         public void InitializePlayerData(PlayerData data)

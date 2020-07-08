@@ -2,14 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class GestureEvent: UnityEvent<InputController.GestureData>
-{
+{ }
 
-}
+public class KeyEvent: UnityEvent<KeyCode>
+{ }
 
 public class InputController : MonoBehaviour
 {
+    private static InputController _instance;
+    public static InputController Instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
+
     public class GestureData
     {
         public int fingerId;
@@ -39,12 +50,19 @@ public class InputController : MonoBehaviour
     public GestureEvent OnTap;
     public GestureEvent OnDrag;
     public GestureEvent OnSwipe;
+    public KeyEvent OnEsc;
 
     private void Awake()
     {
+        if (_instance == null)
+            _instance = this;
+        else
+            Destroy(gameObject);
+
         OnTap = new GestureEvent();
         OnDrag = new GestureEvent();
         OnSwipe = new GestureEvent();
+        OnEsc = new KeyEvent();
     }
 
     void Start()
@@ -54,6 +72,11 @@ public class InputController : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnEsc?.Invoke(KeyCode.Escape);
+        }
+
         if (Input.touchCount == 0)
             _isMoving = false;
         else
@@ -63,6 +86,10 @@ public class InputController : MonoBehaviour
                 //register new input
                 if (touch.phase == TouchPhase.Began)
                 {
+                    //prevent UI taps
+                    if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+                        continue;
+                    //prevent taps while drag
                     if (_isMoving)
                         continue;
                     GestureData gestureData = new GestureData();
@@ -116,7 +143,7 @@ public class InputController : MonoBehaviour
                         _gestures.RemoveAt(index);
                         --count;
                     }
-                } //end proccess existig input
+                } //end proccess existing input
             }
         }
     }

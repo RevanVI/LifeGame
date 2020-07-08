@@ -19,7 +19,7 @@ public class PlayerDataController
 
     public PlayerData Data;
 
-    private string _filePath = Application.dataPath + "data.dat";
+    private string _filePath = Application.persistentDataPath + "/data.dat";
 
     public static void Initialize()
     {

@@ -18,10 +18,31 @@ public class GameController : MonoBehaviour
         Spawn = 1,
     }
 
-    public static GameController Instance;
+    private static GameController _instance;
+    public static GameController Instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
+
     public EGameMode GameMode;
     public ETapMode TapMode;
     private bool _nextStepRequested;
+    private bool _isPaused;
+    public bool Paused
+    {
+        get
+        {
+            return _isPaused;
+        }
+        set
+        {
+            _isPaused = value;
+        }
+    }
+
     public LifeHandler LifeHandlerRef;
     public InputController InputControllerRef;
     public GameUI GameUIRef;
@@ -55,8 +76,8 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
+        if (_instance == null)
+            _instance = this;
         else
             Destroy(gameObject);
         OnSpawn = new UnityEvent();
@@ -93,12 +114,6 @@ public class GameController : MonoBehaviour
             StartCoroutine(GameLoop());
             _isFirstUpdate = false;
         }
-
-        //input
-        if (Input.touchCount > 0)
-        {
-
-        }
     }
 
     public IEnumerator GameLoop()
@@ -106,7 +121,7 @@ public class GameController : MonoBehaviour
         int counter = 0;
         while (true)
         {
-            if (GameMode == EGameMode.Auto || _nextStepRequested)
+            if ((GameMode == EGameMode.Auto || _nextStepRequested) && !_isPaused)
             {
                 _nextStepRequested = false;
                 CalculateStep();
@@ -168,6 +183,7 @@ public class GameController : MonoBehaviour
                 ++life.Age;
             }
         }
+        GameUIRef.UpdateYearsText(Years);
     }
 
     private int GetNeighboursCount(List<LifeNode> nearNodes)
