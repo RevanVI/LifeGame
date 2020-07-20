@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour
     {
         Normal = 0,
         Spawn = 1,
+        Remove = 2,
     }
 
     private static GameController _instance;
@@ -97,6 +98,7 @@ public class GameController : MonoBehaviour
         InputControllerRef.OnTap.AddListener(ProcessTap);
         InputControllerRef.OnSwipe.AddListener(ProcessSwipe);
         InputControllerRef.OnDrag.AddListener(ProcessDrag);
+        NodeInfo.OnButtonsClick.AddListener(ProcessNodeInfoPanelButtonClick);
         NodeInfo.gameObject.SetActive(false);
         HealthBarRef.SetMode(true);
         HealthBarRef.SetMaxValue(MaxPower);
@@ -238,14 +240,7 @@ public class GameController : MonoBehaviour
             {
                 if (TapMode == ETapMode.Spawn)
                 {
-                    if (buf.GetLife() != null)
-                        return;
-                    ChangePower(-1);
-                    LifeDot life = LifeHandlerRef.TakeLife();
-                    life.transform.position = GridSystem.Instance.GetWorldCoordsFromTilemap(buf.Coords);
-                    buf.AddLife(life);
-                    life.gameObject.SetActive(true);
-                    OnSpawn.Invoke();
+                    SpawnLife(buf);
                 }
                 else
                 {
@@ -336,6 +331,17 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public void ProcessNodeInfoPanelButtonClick(int buttonNo)
+    {
+        if (buttonNo == 0)
+            NodeInfo.Close();
+        else if (buttonNo == 1)
+            SpawnLife(NodeInfo.NodeRef);
+        else
+            RemoveLife(NodeInfo.NodeRef);
+        NodeInfo.UpdateInfo();
+    }
+
     public void ChangePower(int value)
     {
         _power += value;
@@ -344,6 +350,27 @@ public class GameController : MonoBehaviour
         else if (_power < 0)
             _power = 0;
         HealthBarRef.SetValue(_power);
+    }
+
+    protected void SpawnLife(LifeNode node)
+    {
+        if (node.GetLife() != null)
+            return;
+        ChangePower(-1);
+        LifeDot life = LifeHandlerRef.TakeLife();
+        life.transform.position = GridSystem.Instance.GetWorldCoordsFromTilemap(node.Coords);
+        node.AddLife(life);
+        life.gameObject.SetActive(true);
+        OnSpawn.Invoke();
+    }
+
+    protected void RemoveLife(LifeNode node)
+    {
+        if (node.GetLife() == null)
+            return;
+        ChangePower(-1);
+        LifeDot lifeDot = node.RemoveLife();
+        LifeHandlerRef.ReleaseLife(lifeDot);
     }
 }
 

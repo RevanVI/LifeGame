@@ -8,3 +8,7 @@ public class BoolEvent: UnityEvent<bool>
 
 }
 
+public class IntEvent: UnityEvent<int>
+{
+
+}

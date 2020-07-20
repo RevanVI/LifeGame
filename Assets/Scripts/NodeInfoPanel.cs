@@ -10,27 +10,73 @@ public class NodeInfoPanel : MonoBehaviour
     [SerializeField]
     private Text _yearsText;
 
-    protected LifeNode Node;
+    [SerializeField]
+    private Button _closeButton;
+    [SerializeField]
+    private Button _spawnButton;
+    [SerializeField]
+    private Button _removeButton;
+
+    private LifeNode _node;
+    public LifeNode NodeRef
+    {
+        get { return _node; }
+    }
+
+    public IntEvent OnButtonsClick;
+
+    public NodeInfoPanel()
+    {
+        OnButtonsClick = new IntEvent();
+    }
+
+    private void Start()
+    {
+        _closeButton.onClick.AddListener(ProcessCloseClick);
+        _spawnButton.onClick.AddListener(ProcessSpawnClick);
+        _removeButton.onClick.AddListener(ProcessRemoveClick);
+    }
 
     public void UpdateInfo()
     {
-        if (Node == null)
+        if (_node == null)
             return;
-        if (Node.GetLife() == null)
+        if (_node.GetLife() == null)
         {
             _yearsText.gameObject.SetActive(false);
         }
         else
         {
             _yearsText.gameObject.SetActive(true);
-            _yearsText.text = Node.GetLife().Age.ToString();
+            _yearsText.text = _node.GetLife().Age.ToString();
         }
     }
 
     public void SetNode(LifeNode node)
     {
-        Node = node;
-        _positionText.text = $"{Node.Coords.x}, {Node.Coords.y}";
+        _node = node;
+        _positionText.text = $"{_node.Coords.x}, {_node.Coords.y}";
         UpdateInfo();
+    }
+
+    public void Close()
+    {
+        _node = null;
+        gameObject.SetActive(false);
+    }
+
+    private void ProcessCloseClick()
+    {
+        OnButtonsClick.Invoke(0);
+    }
+
+    private void ProcessSpawnClick()
+    {
+        OnButtonsClick.Invoke(1);
+    }
+
+    private void ProcessRemoveClick()
+    {
+        OnButtonsClick.Invoke(2);
     }
 }
