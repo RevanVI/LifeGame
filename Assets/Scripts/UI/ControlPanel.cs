@@ -10,16 +10,16 @@ public class ControlPanel : MonoBehaviour
     [SerializeField]
     private Toggle _spawnButton;
     [SerializeField]
-    private Toggle _debugButton;
+    private Toggle _removeButton;
     public BoolEvent OnSpawnButtonClick;
-    public BoolEvent OnDebugButtonClick;
+    public BoolEvent OnRemoveButtonClick;
 
     private int _activeButton;
 
     private void Awake()
     {
         OnSpawnButtonClick = new BoolEvent();
-        OnDebugButtonClick = new BoolEvent();
+        OnRemoveButtonClick = new BoolEvent();
     }
 
 
@@ -27,7 +27,7 @@ public class ControlPanel : MonoBehaviour
     void Start()
     {
         _spawnButton.onValueChanged.AddListener(ProcessSpawnButtonClick);
-        _debugButton.onValueChanged.AddListener(ProcessDebugButtonClick);
+        _removeButton.onValueChanged.AddListener(ProcessDebugButtonClick);
     }
 
     // Update is called once per frame
@@ -38,20 +38,17 @@ public class ControlPanel : MonoBehaviour
 
     public void ProcessSpawnButtonClick(bool status)
     {
-        Debug.Log("SpawnBUttonClick");
         OnSpawnButtonClick.Invoke(status);
     }
 
     public void ProcessDebugButtonClick(bool status)
     {
-        Debug.Log("DebugBUttonClick");
-        OnDebugButtonClick.Invoke(status);
+        OnRemoveButtonClick.Invoke(status);
     }
 
     public void ClearToggles()
     {
-        Debug.Log("ClearToggles");
         _spawnButton.isOn = false;
-        _debugButton.isOn = false;
+        _removeButton.isOn = false;
     }
 }

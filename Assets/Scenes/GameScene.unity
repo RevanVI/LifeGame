@@ -1228,7 +1228,7 @@ GameObject:
   - component: {fileID: 481337633}
   - component: {fileID: 481337632}
   m_Layer: 5
-  m_Name: DebugButton
+  m_Name: RemoveButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1676,7 +1676,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spawnButton: {fileID: 136966540}
-  _debugButton: {fileID: 481337632}
+  _removeButton: {fileID: 481337632}
 --- !u!114 &587397169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3148,7 +3148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6084906, g: 0.8499952, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
