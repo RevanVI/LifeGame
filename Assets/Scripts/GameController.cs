@@ -61,12 +61,33 @@ public class GameController : MonoBehaviour
     private AnimationCurve _cameraSpeedCurve;
     [SerializeField]
     private float _swipeCameraTime;
+    [SerializeField]
+    private BoxCollider2D _mapBounds;
 
     public NodeInfoPanel NodeInfo;
-    public HealthBar HealthBarRef;
+    public PowerBar PowerBarRef;
 
-    public int MaxPower = 5;
-    private int _power = 5;
+    [SerializeField]
+    private float _stepTime = 1f;
+
+    [SerializeField]
+    private int _maxPower;
+    public int MaxPower
+    {
+        get
+        {
+            return _maxPower;
+        }
+    }
+
+    private int _power;
+    public int Power
+    {
+        get
+        {
+            return _power;
+        }
+    }
 
     public UnityEvent OnStep;
     public UnityEvent OnSpawn;
@@ -100,9 +121,8 @@ public class GameController : MonoBehaviour
         InputControllerRef.OnDrag.AddListener(ProcessDrag);
         NodeInfo.OnButtonsClick.AddListener(ProcessNodeInfoPanelButtonClick);
         NodeInfo.gameObject.SetActive(false);
-        HealthBarRef.SetMode(true);
-        HealthBarRef.SetMaxValue(MaxPower);
-        HealthBarRef.SetValue(MaxPower);
+        PowerBarRef.Initialize(_maxPower);
+        //HealthBarRef.SetValue(MaxPower);
         OnStep.AddListener(NodeInfo.UpdateInfo);
         ControlPanelRef.OnSpawnButtonClick.AddListener(ProcessSpawnModeButtonClick);
         ControlPanelRef.OnRemoveButtonClick.AddListener(ProcessRemoveModeButtonClick);
@@ -137,7 +157,7 @@ public class GameController : MonoBehaviour
                 ProcessStep();
                 OnStep.Invoke();
                 ++Years;
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(_stepTime);
             }
             yield return null;
         }
@@ -176,13 +196,13 @@ public class GameController : MonoBehaviour
             else if (currentNode.Status == LifeNode.NodeStatus.Occupied && currentNode.NewStatus == LifeNode.NodeStatus.Empty)
             {
                 LifeDot life = currentNode.RemoveLife();
-                LifeDot.OnDie.Invoke();
+                life.Die();
                 LifeHandlerRef.ReleaseLife(life);
             }
             else if (currentNode.Status == LifeNode.NodeStatus.Occupied && currentNode.NewStatus == LifeNode.NodeStatus.Occupied)
             {
                 LifeDot life = currentNode.ObjectsOnTile[0].GetComponent<LifeDot>();
-                ++life.Age;
+                life.Grow();
             }
         }
         GameUIRef.UpdateYearsText(Years);
@@ -263,8 +283,10 @@ public class GameController : MonoBehaviour
                                                                           gestureData.endPosition.y - gestureData.deltaPosition.y, 
                                                                           MainCamera.nearClipPlane));
         Vector3 endPos = MainCamera.ScreenToWorldPoint(new Vector3(gestureData.endPosition.x, gestureData.endPosition.y, MainCamera.nearClipPlane));
-
-        MainCamera.transform.position += (lastPosition - endPos);
+        Vector3 newPos = MainCamera.transform.position + (lastPosition - endPos);
+        newPos.x = Mathf.Clamp(newPos.x, _mapBounds.bounds.min.x + MainCamera.orthographicSize * MainCamera.aspect, _mapBounds.bounds.max.x - MainCamera.orthographicSize * MainCamera.aspect);
+        newPos.y = Mathf.Clamp(newPos.y, _mapBounds.bounds.min.y + MainCamera.orthographicSize, _mapBounds.bounds.max.y - MainCamera.orthographicSize);
+        MainCamera.transform.position = newPos;
         touchText.text = $"Drag. ID: {gestureData.fingerId}, Position: {gestureData.endPosition}, Time: {gestureData.time}\n" +
             $"LastWorldPosition: {lastPosition}, EndWorldPosition: {endPos}, CameraPosition: {MainCamera.transform.position}";
     }
@@ -349,13 +371,23 @@ public class GameController : MonoBehaviour
 
     public bool ChangePower(int value)
     {
-        if (value < 0 && _power < (-value))
-            return false;
-        _power += value;
-        if (_power > MaxPower)
-            _power = MaxPower;
-        HealthBarRef.SetValue(_power);
-        return true;
+        int count = 0;
+        if (_power + value > _maxPower)
+        {
+            count = _maxPower - _power;
+            _power = _maxPower;
+        }
+        else if (_power + value >= 0)
+        {
+            count = value;
+            _power += value;
+        }
+
+        if (count > 0)
+            PowerBarRef.AddPower(count);
+        else
+            PowerBarRef.RemovePower(-count);
+        return (count != 0);
     }
 
     protected void SpawnLife(LifeNode node)
