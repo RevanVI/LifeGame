@@ -6,8 +6,7 @@ using UnityEngine.Events;
 
 public class GameUI : MonoBehaviour
 {
-    public Button ModeButton;
-    private Text _modeButtonText;
+    public Toggle ModeToggle;
     public Button StepButton;
     private Text _stepButtonText;
 
@@ -18,18 +17,17 @@ public class GameUI : MonoBehaviour
     public string AutoModeText = "Auto";
     public string ManualModeText = "Manual";
 
-    public UnityEvent OnModeButtonClick;
+    public BoolEvent OnModeToggleClick;
     public UnityEvent OnStepButtonClick;
 
     private void Awake()
     {
-        _modeButtonText = ModeButton.gameObject.GetComponentInChildren<Text>();
         _stepButtonText = StepButton.gameObject.GetComponentInChildren<Text>();
 
-        OnModeButtonClick = new UnityEvent();
+        OnModeToggleClick = new BoolEvent();
         OnStepButtonClick = new UnityEvent();
 
-        ModeButton.onClick.AddListener(ProcessModeButtonClick);
+        ModeToggle.onValueChanged.AddListener(ProcessModeButtonClick);
         StepButton.onClick.AddListener(ProcessStepButtonClick);
     }
 
@@ -42,19 +40,17 @@ public class GameUI : MonoBehaviour
     {
         if (GameController.Instance.GameMode == GameController.EGameMode.Auto)
         {
-            _modeButtonText.text = AutoModeText;
             StepButton.interactable = false;
         }
         else
         {
-            _modeButtonText.text = ManualModeText;
             StepButton.interactable = true;
         }
     }
 
-    public void ProcessModeButtonClick()
+    public void ProcessModeButtonClick(bool isOn)
     {
-        OnModeButtonClick.Invoke();
+        OnModeToggleClick.Invoke(isOn);
     }
 
     public void ProcessStepButtonClick()

@@ -114,7 +114,7 @@ public class GameController : MonoBehaviour
         LifeHandlerRef.Initialize();
         OnStep = new UnityEvent();
 
-        GameUIRef.OnModeButtonClick.AddListener(ChangeGameMode);
+        GameUIRef.OnModeToggleClick.AddListener(ChangeGameMode);
         GameUIRef.OnStepButtonClick.AddListener(RequestNextStep);
         InputControllerRef.OnTap.AddListener(ProcessTap);
         InputControllerRef.OnSwipe.AddListener(ProcessSwipe);
@@ -122,7 +122,6 @@ public class GameController : MonoBehaviour
         NodeInfo.OnButtonsClick.AddListener(ProcessNodeInfoPanelButtonClick);
         NodeInfo.gameObject.SetActive(false);
         PowerBarRef.Initialize(_maxPower);
-        //HealthBarRef.SetValue(MaxPower);
         OnStep.AddListener(NodeInfo.UpdateInfo);
         ControlPanelRef.OnSpawnButtonClick.AddListener(ProcessSpawnModeButtonClick);
         ControlPanelRef.OnRemoveButtonClick.AddListener(ProcessRemoveModeButtonClick);
@@ -224,7 +223,7 @@ public class GameController : MonoBehaviour
         GridSystem.Instance.AddLifeToGraph(life);
     }
 
-    public void ChangeGameMode()
+    public void ChangeGameMode(bool isManual)
     {
         if (GameMode == EGameMode.Auto)
             GameMode = EGameMode.Manual;
@@ -237,7 +236,6 @@ public class GameController : MonoBehaviour
             }
         }
         GameUIRef.ChangeMode();
-
     }
 
     public void RequestNextStep()
