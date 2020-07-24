@@ -6,15 +6,6 @@ using UnityEngine.UI;
 public class AchievementRowHandler : MonoBehaviour
 {
     [SerializeField]
-    private Image _icon;
-    public Sprite Icon
-    {
-        set
-        {
-            _icon.sprite = value;
-        }
-    }
-    [SerializeField]
     private Text _title;
     public string Title
     {
@@ -55,17 +46,33 @@ public class AchievementRowHandler : MonoBehaviour
     }
     [SerializeField]
     private Text _steps;
-    public (int current, int target) Steps
+
+    [SerializeField]
+    private Image _scoreImage;
+
+    [SerializeField]
+    private Color _completeColor;
+    [SerializeField]
+    private Color _uncompleteColor;
+
+    public (int current, int max) Steps
     {
         set
         {
-            _steps.text = $"{value.current} / {value.target}";
+            if (value.current >= 0 && value.current < value.max)
+            {
+                _steps.text = $"{value.current} / {value.max}";
+                if (value.current == value.max)
+                    _scoreImage.color = _completeColor;
+                else
+                    _scoreImage.color = _uncompleteColor;
+            }
+            
         }
     }
 
     public void SetData(Achievements.AchievementData data)
     {
-        Icon = data.Icon;
         Title = data.Title;
         Description = data.Description;
         Score = data.Score.ToString();
