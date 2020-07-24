@@ -225,6 +225,7 @@ public class GameController : MonoBehaviour
 
     public void ChangeGameMode(bool isManual)
     {
+        Debug.Log($"ChangeGameMode {isManual}");
         if (GameMode == EGameMode.Auto)
             GameMode = EGameMode.Manual;
         else
@@ -325,10 +326,11 @@ public class GameController : MonoBehaviour
 
     public void ProcessSpawnModeButtonClick(bool status)
     {
+        Debug.Log($"ProcessSpawnModeButtonClick {status}");
         if (status == true)
         {
             GameMode = EGameMode.Manual;
-            GameUIRef.ChangeMode();
+            GameUIRef.ChangeMode(false);
             TapMode = ETapMode.Spawn;
         }
         else
@@ -342,7 +344,7 @@ public class GameController : MonoBehaviour
         if (status == true)
         {
             GameMode = EGameMode.Manual;
-            GameUIRef.ChangeMode();
+            GameUIRef.ChangeMode(false);
             TapMode = ETapMode.Remove;
         }
         else
