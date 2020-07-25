@@ -37,12 +37,22 @@ namespace Achievements
                 Destroy(gameObject);  
         }
 
-        private void ProcessAchievement(EAchievements ach)
+        private void ProcessAchievement(EAchievements ach, int val = -1)
         {
             int achNum = (int)ach;
+            //already complete
             if (PlayerDataController.Instance.Data.AchievementsStatus[ach] == _achievementsData.achievementData[achNum].Steps)
                 return;
-            PlayerDataController.Instance.Data.AchievementsStatus[ach] += 1;
+            
+            if (val == -1)
+            {
+                PlayerDataController.Instance.Data.AchievementsStatus[ach] += 1;
+            }
+            //if val != -1 then achievement track the greatest value
+            else if (PlayerDataController.Instance.Data.AchievementsStatus[ach] < val)
+            {
+                PlayerDataController.Instance.Data.AchievementsStatus[ach] = (val < _achievementsData.achievementData[achNum].Steps) ? val : _achievementsData.achievementData[achNum].Steps;
+            }
             if (PlayerDataController.Instance.Data.AchievementsStatus[ach] == _achievementsData.achievementData[achNum].Steps)
                 PlayerDataController.Instance.Data.AchievementPoints += _achievementsData.achievementData[achNum].Score;
             PlayerDataController.Instance.WriteData();
@@ -50,12 +60,34 @@ namespace Achievements
 
         void ProcessSpawn()
         {
-            ProcessAchievement(EAchievements.CreateLife5);
+            ProcessAchievement(EAchievements.Create10);
+            ProcessAchievement(EAchievements.Create25);
+            ProcessAchievement(EAchievements.Create50);
+            ProcessAchievement(EAchievements.Create100);
         }
 
         void ProcessDie()
         {
             ProcessAchievement(EAchievements.Die10);
+            ProcessAchievement(EAchievements.Die25);
+            ProcessAchievement(EAchievements.Die50);
+            ProcessAchievement(EAchievements.Die100);
+        }
+
+        void ProcessGrow(int age)
+        {
+            ProcessAchievement(EAchievements.Age10, age);
+            ProcessAchievement(EAchievements.Age20, age);
+            ProcessAchievement(EAchievements.Age50, age);
+            ProcessAchievement(EAchievements.Age100, age);
+        }
+
+        void ProcessRemove()
+        {
+            ProcessAchievement(EAchievements.Remove10);
+            ProcessAchievement(EAchievements.Remove25);
+            ProcessAchievement(EAchievements.Remove50);
+            ProcessAchievement(EAchievements.Remove100);
         }
 
         public void UpdateAchievements()
@@ -90,7 +122,9 @@ namespace Achievements
         void Start()
         {
             LifeDot.OnDie.AddListener(ProcessDie);
+            LifeDot.OnGrow.AddListener(ProcessGrow);
             GameController.Instance.OnSpawn.AddListener(ProcessSpawn);
+            GameController.Instance.OnRemove.AddListener(ProcessRemove);
             gameObject.SetActive(false);
         }
 

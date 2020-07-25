@@ -91,6 +91,7 @@ public class GameController : MonoBehaviour
 
     public UnityEvent OnStep;
     public UnityEvent OnSpawn;
+    public UnityEvent OnRemove;
     
     //debug
     public Text touchText;
@@ -103,6 +104,7 @@ public class GameController : MonoBehaviour
         else
             Destroy(gameObject);
         OnSpawn = new UnityEvent();
+        OnRemove = new UnityEvent();
     }
 
     // Start is called before the first frame update
@@ -167,7 +169,7 @@ public class GameController : MonoBehaviour
         foreach (Vector3Int pos in GridSystem.Instance.MainTilemap.cellBounds.allPositionsWithin)
         {
             LifeNode currentNode = GridSystem.Instance.GetNode(pos) as LifeNode;
-            if (currentNode.Status == LifeNode.NodeStatus.Blocked)
+            if (currentNode is null || currentNode.Status == LifeNode.NodeStatus.Blocked)
                 continue;
             List<LifeNode> nearNodes = GridSystem.Instance.GetNearNodes(pos);
             int neigboursCount = GetNeighboursCount(nearNodes);
@@ -185,6 +187,8 @@ public class GameController : MonoBehaviour
         foreach (Vector3Int pos in GridSystem.Instance.MainTilemap.cellBounds.allPositionsWithin)
         {
             LifeNode currentNode = GridSystem.Instance.GetNode(pos) as LifeNode;
+            if (currentNode is null)
+                continue;
             if (currentNode.Status == LifeNode.NodeStatus.Empty && currentNode.NewStatus == LifeNode.NodeStatus.Occupied)
             {
                 LifeDot life = LifeHandlerRef.TakeLife();
@@ -225,7 +229,6 @@ public class GameController : MonoBehaviour
 
     public void ChangeGameMode(bool isManual)
     {
-        Debug.Log($"ChangeGameMode {isManual}");
         if (GameMode == EGameMode.Auto)
             GameMode = EGameMode.Manual;
         else
@@ -236,7 +239,7 @@ public class GameController : MonoBehaviour
                 ControlPanelRef.ClearToggles();
             }
         }
-        GameUIRef.ChangeMode();
+        GameUIRef.UpdateMode();
     }
 
     public void RequestNextStep()
@@ -282,10 +285,7 @@ public class GameController : MonoBehaviour
                                                                           gestureData.endPosition.y - gestureData.deltaPosition.y, 
                                                                           MainCamera.nearClipPlane));
         Vector3 endPos = MainCamera.ScreenToWorldPoint(new Vector3(gestureData.endPosition.x, gestureData.endPosition.y, MainCamera.nearClipPlane));
-        Vector3 newPos = MainCamera.transform.position + (lastPosition - endPos);
-        newPos.x = Mathf.Clamp(newPos.x, _mapBounds.bounds.min.x + MainCamera.orthographicSize * MainCamera.aspect, _mapBounds.bounds.max.x - MainCamera.orthographicSize * MainCamera.aspect);
-        newPos.y = Mathf.Clamp(newPos.y, _mapBounds.bounds.min.y + MainCamera.orthographicSize, _mapBounds.bounds.max.y - MainCamera.orthographicSize);
-        MainCamera.transform.position = newPos;
+        MainCamera.transform.position = CheckMapBounds(MainCamera.transform.position + (lastPosition - endPos));
         touchText.text = $"Drag. ID: {gestureData.fingerId}, Position: {gestureData.endPosition}, Time: {gestureData.time}\n" +
             $"LastWorldPosition: {lastPosition}, EndWorldPosition: {endPos}, CameraPosition: {MainCamera.transform.position}";
     }
@@ -307,7 +307,7 @@ public class GameController : MonoBehaviour
             if (_stopCamera)
             {
                 _stopCamera = false;
-                yield break;
+                break;
             }
             curTime += Time.deltaTime;
             if (curTime >= _swipeCameraTime)
@@ -318,19 +318,25 @@ public class GameController : MonoBehaviour
             float timeValue = curTime / _swipeCameraTime;
             float speedModif = _cameraSpeedCurve.Evaluate(timeValue);
             float speed = _basicCameraSpeed * speedModif;
-            MainCamera.transform.position += direction * speed * Time.deltaTime;
+            MainCamera.transform.position = CheckMapBounds(MainCamera.transform.position + direction * speed * Time.deltaTime);
             yield return null;
         }
         _isCameraMoving = false;
     }
 
+    private Vector3 CheckMapBounds(Vector3 newPos)
+    {
+        newPos.x = Mathf.Clamp(newPos.x, _mapBounds.bounds.min.x + MainCamera.orthographicSize * MainCamera.aspect, _mapBounds.bounds.max.x - MainCamera.orthographicSize * MainCamera.aspect);
+        newPos.y = Mathf.Clamp(newPos.y, _mapBounds.bounds.min.y + MainCamera.orthographicSize, _mapBounds.bounds.max.y - MainCamera.orthographicSize);
+        return newPos;
+    }
+
     public void ProcessSpawnModeButtonClick(bool status)
     {
-        Debug.Log($"ProcessSpawnModeButtonClick {status}");
         if (status == true)
         {
             GameMode = EGameMode.Manual;
-            GameUIRef.ChangeMode(false);
+            GameUIRef.UpdateMode(true);
             TapMode = ETapMode.Spawn;
         }
         else
@@ -344,7 +350,7 @@ public class GameController : MonoBehaviour
         if (status == true)
         {
             GameMode = EGameMode.Manual;
-            GameUIRef.ChangeMode(false);
+            GameUIRef.UpdateMode(true);
             TapMode = ETapMode.Remove;
         }
         else
@@ -360,7 +366,7 @@ public class GameController : MonoBehaviour
         else
         {
             GameMode = EGameMode.Manual;
-            GameUIRef.ChangeMode();
+            GameUIRef.UpdateMode(true);
             if (buttonNo == 1)
                 SpawnLife(NodeInfo.NodeRef);
             else
@@ -412,6 +418,7 @@ public class GameController : MonoBehaviour
         {
             LifeDot lifeDot = node.RemoveLife();
             LifeHandlerRef.ReleaseLife(lifeDot);
+            OnRemove.Invoke();
         }
     }
 }

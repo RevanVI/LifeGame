@@ -13,17 +13,99 @@ MonoBehaviour:
   m_Name: Achiements
   m_EditorClassIdentifier: 
   achievementData:
-  - Icon: {fileID: 0}
-    Title: Die
-    Description: first description
+  - Title: They all die
+    Description: 10 dead creatures
     Score: 5
     Steps: 10
     EnumId: Die10
     Id: 0
-  - Icon: {fileID: 0}
-    Title: Create life
-    Description: second description
+  - Title: 'They all (and more) die '
+    Description: 25 dead creatures
     Score: 10
-    Steps: 5
-    EnumId: CreateLife5
+    Steps: 25
+    EnumId: Die25
+    Id: 0
+  - Title: 'They all (and even more) die '
+    Description: 50 dead creatures
+    Score: 15
+    Steps: 50
+    EnumId: Die50
+    Id: 0
+  - Title: 'They all (super mega ultra more) die '
+    Description: 100 dead creatures
+    Score: 20
+    Steps: 100
+    EnumId: Die100
+    Id: 0
+  - Title: Young alchemist
+    Description: Create life 10 times
+    Score: 5
+    Steps: 10
+    EnumId: Create10
+    Id: 0
+  - Title: Life creator
+    Description: Create life 25 times
+    Score: 10
+    Steps: 25
+    EnumId: Create25
+    Id: 0
+  - Title: Life manager
+    Description: Create life 50 times
+    Score: 15
+    Steps: 50
+    EnumId: Create50
+    Id: 0
+  - Title: Slime's god
+    Description: Create life 100 times
+    Score: 20
+    Steps: 100
+    EnumId: Create100
+    Id: 0
+  - Title: Failed experiment
+    Description: Remove life 10 times
+    Score: 5
+    Steps: 10
+    EnumId: Remove10
+    Id: 0
+  - Title: You should not be here
+    Description: Remove life 25 times
+    Score: 10
+    Steps: 25
+    EnumId: Remove25
+    Id: 0
+  - Title: Population control
+    Description: Remove life 50 times
+    Score: 15
+    Steps: 50
+    EnumId: Remove50
+    Id: 0
+  - Title: Are you sure you're a god?
+    Description: Remove life 100 times
+    Score: 20
+    Steps: 100
+    EnumId: Remove100
+    Id: 0
+  - Title: I am alive
+    Description: Slime lives 10 cycles
+    Score: 5
+    Steps: 10
+    EnumId: Age10
+    Id: 0
+  - Title: I am getting bigger
+    Description: Slime lives 20 cycles
+    Score: 10
+    Steps: 20
+    EnumId: Age20
+    Id: 0
+  - Title: I think I saw the creation of the universe
+    Description: Slime lives 50 cycles
+    Score: 15
+    Steps: 50
+    EnumId: Age50
+    Id: 0
+  - Title: I have become so full of knowledge...
+    Description: Slime lives 100 cycles
+    Score: 50
+    Steps: 100
+    EnumId: Age100
     Id: 0

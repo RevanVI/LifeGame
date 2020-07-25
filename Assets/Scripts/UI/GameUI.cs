@@ -21,7 +21,8 @@ public class GameUI : MonoBehaviour
     public UnityEvent OnStepButtonClick;
 
     //variable for control toggle state changes by click or programmatically and prevent OnModeToggleClick event trigger
-    private bool _modeChangeByToggle = true;
+    private bool _ignoreNextToggleValueChange = false;
+    private GameController.EGameMode _curVisibleMode = GameController.EGameMode.Auto;
 
     private void Awake()
     {
@@ -36,26 +37,29 @@ public class GameUI : MonoBehaviour
 
     private void Start()
     {
-        ChangeMode();
+        UpdateMode();
     }
 
-    public void ChangeMode(bool changedByToggle = true)
+    public void UpdateMode(bool changedProgrammatically = false)
     {
-        Debug.Log($"ChangeMode {changedByToggle}");
-        _modeChangeByToggle = changedByToggle;
         bool status = (GameController.Instance.GameMode == GameController.EGameMode.Auto) ? false : true;
-        StepButton.interactable = status;
-        if (!_modeChangeByToggle)
-            ModeToggle.isOn = status;
+        if (_curVisibleMode != GameController.Instance.GameMode)
+        {
+            StepButton.interactable = status;
+            _ignoreNextToggleValueChange = changedProgrammatically;
+            if (changedProgrammatically)
+                ModeToggle.isOn = status;
+            _curVisibleMode = GameController.Instance.GameMode;
+        }
+        
     }
 
     public void ProcessModeButtonClick(bool isOn)
     {
-        Debug.Log($"ProcessModeButtonClick _modeChangeByToggle {_modeChangeByToggle}, isOn {isOn}");
-        if (_modeChangeByToggle)
+        if (!_ignoreNextToggleValueChange)
             OnModeToggleClick.Invoke(isOn);
         else
-            _modeChangeByToggle = true;
+            _ignoreNextToggleValueChange = false;
     }
 
     public void ProcessStepButtonClick()

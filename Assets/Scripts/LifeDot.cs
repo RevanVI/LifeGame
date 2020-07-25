@@ -12,6 +12,8 @@ public class LifeDot : MonoBehaviour
 
     private Animator _animController;
 
+    static public UnityEvent OnDie = new UnityEvent();
+    static public IntEvent OnGrow = new IntEvent();
 
     // Start is called before the first frame update
     void Start()
@@ -37,7 +39,8 @@ public class LifeDot : MonoBehaviour
     {
         ++Age;
         _animController.SetInteger("Age", Age);
+        OnGrow.Invoke(Age);
     }
 
-    static public UnityEvent OnDie = new UnityEvent();
+    
 }

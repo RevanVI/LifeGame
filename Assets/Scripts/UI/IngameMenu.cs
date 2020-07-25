@@ -14,6 +14,8 @@ public class IngameMenu : MonoBehaviour
 
     [SerializeField]
     private GameObject _settingsMenu;
+    [SerializeField]
+    private GameObject _backgroundPanel;
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +53,7 @@ public class IngameMenu : MonoBehaviour
     private void ShowTab(int index)
     {
         GameController.Instance.Paused = true;
+        _backgroundPanel.SetActive(true);
         if (index == 0)
         {
             _settingsMenu.SetActive(true);
@@ -74,6 +77,7 @@ public class IngameMenu : MonoBehaviour
         {
             Achievements.AchievementController.Instance.gameObject.SetActive(false);
         }
+        _backgroundPanel.SetActive(false);
         _currentActiveButon = -1;
         GameController.Instance.Paused = false;
     }

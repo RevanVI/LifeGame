@@ -59,7 +59,7 @@ public class AchievementRowHandler : MonoBehaviour
     {
         set
         {
-            if (value.current >= 0 && value.current < value.max)
+            if (value.current >= 0 && value.current <= value.max)
             {
                 _steps.text = $"{value.current} / {value.max}";
                 if (value.current == value.max)
