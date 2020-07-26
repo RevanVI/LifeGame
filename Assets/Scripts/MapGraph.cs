@@ -89,7 +89,8 @@ public class MapGraph
 
     public string CreateNodeKeyFromCoordinates(int x, int y)
     {
-        return $"({x},{y})";
+        //return $"({x},{y})";
+        return "(" + x.ToString() + "," + y.ToString() + ")";
     }
 
     public Node GetNode(Vector3Int coords)
@@ -102,9 +103,9 @@ public class MapGraph
 
     public Node GetNode(string coords)
     {
-        if (_nodeGraph.ContainsKey(coords))
-            return _nodeGraph[coords];
-        return null;
+        Node node = null;
+        bool exist = _nodeGraph.TryGetValue(coords, out node);
+        return node;
     }
 
     public bool AddNode(Node node)

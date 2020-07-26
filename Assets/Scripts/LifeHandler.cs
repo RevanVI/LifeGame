@@ -15,7 +15,7 @@ public class LifeHandler : MonoBehaviour
         _freeLifes = new List<LifeDot>();
 
         int startCount = tileCount / 2;
-        for (int i = 0; i < tileCount; ++i)
+        for (int i = 0; i < startCount; ++i)
         {
             GameObject lifeGameObject = Instantiate(LifePrefab, transform);
             LifeDot life = lifeGameObject.GetComponent<LifeDot>();
